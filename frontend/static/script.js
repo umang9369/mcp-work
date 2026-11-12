@@ -174,3 +174,32 @@ function downloadPDF() {
             showError("Could not download PDF.");
         });
 }
+
+document.addEventListener("keydown", function (event) {
+    if (event.ctrlKey && event.key === "Enter") {
+        sendMessage();
+    }
+    function updateQuickPrompts() {
+        const buttonGroup = document.getElementById("quickPrompts");
+
+        if (!buttonGroup) {
+            return;
+        }
+
+        const prompts = [
+            "Plan a 3-day trip to Bali for two",
+            "Create a weekend itinerary for Paris",
+            "Suggest a family-friendly vacation in Japan",
+            "Design a solo backpacking trip in Southeast Asia"
+        ];
+
+        buttonGroup.innerHTML = prompts.map(prompt => {
+            return `
+            <button onclick="setPrompt('${prompt.replace(/'/g, "\\'")}')" title="Use this prompt">
+                ${prompt}
+            </button>
+        `;
+        }).join("");
+    }
+    updateQuickPrompts();
+});
