@@ -6,7 +6,8 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent.parent
+FRONTEND_DIR = BASE_DIR / "frontend"
 
 app = FastAPI(
     title="TripMate AI",
@@ -16,13 +17,13 @@ app = FastAPI(
 
 app.mount(
     "/static",
-    StaticFiles(directory=str(BASE_DIR / "static")),
+    StaticFiles(directory=str(FRONTEND_DIR / "static")),
     name="static"
 )
 
 
 templates = Jinja2Templates(
-    directory=str(BASE_DIR / "templates")
+    directory=str(FRONTEND_DIR / "templates")
 )
 
 @app.get("/", response_class=HTMLResponse)
@@ -32,3 +33,5 @@ async def home(request: Request):
         name="index.html",
         context={}
     )
+
+
