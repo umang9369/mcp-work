@@ -124,3 +124,53 @@ function copyResult() {
             showError("Could not copy result.");
         });
 }
+function downloadPDF() {
+    const pdfContent = document.getElementById("pdfContent");
+
+    if (!latestAnswerMarkdown || !pdfContent) {
+        showError("No travel plan available to download.");
+        return;
+    }
+
+    const downloadBtn = document.querySelector(".download-btn");
+    const oldText = downloadBtn.textContent;
+
+    downloadBtn.textContent = "Preparing PDF...";
+    downloadBtn.disabled = true;
+
+    const options = {
+        margin: 0.5,
+        filename: "ai-travel-plan.pdf",
+        image: {
+            type: "jpeg",
+            quality: 0.98
+        },
+        html2canvas: {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: "#ffffff"
+        },
+        jsPDF: {
+            unit: "in",
+            format: "a4",
+            orientation: "portrait"
+        },
+        pagebreak: {
+            mode: ["avoid-all", "css", "legacy"]
+        }
+    };
+
+    html2pdf()
+        .set(options)
+        .from(pdfContent)
+        .save()
+        .then(() => {
+            downloadBtn.textContent = oldText;
+            downloadBtn.disabled = false;
+        })
+        .catch(() => {
+            downloadBtn.textContent = oldText;
+            downloadBtn.disabled = false;
+            showError("Could not download PDF.");
+        });
+}
